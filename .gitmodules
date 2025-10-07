@@ -1,0 +1,3 @@
+[submodule "samples/things-cli"]
+	path = samples/things-cli
+	url = https://github.com/thingsapi/things-cli.git

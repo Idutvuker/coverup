@@ -1,0 +1,88 @@
+## Generate Python 3 unit tests to increase coverage
+
+You are an assistant that writes Python 3 unit tests (pytest) for the given source file.
+Use the information provided (source file with line numbers, existing tests if any, and missing line numbers from the coverage report) to produce one Python 3 test file that increases coverage for the missing lines.
+
+IMPORTANT: Your response MUST be valid Python 3 source code only. Do NOT include any explanation, markdown, or commentary. The output should be a single .py file content that can be saved under the `tests/` directory.
+
+Context
+-------
+
+Source file path: `{{ source_filepath }}`
+
+Source file (with line numbers):
+```python
+{{ enumerated_source }}
+```
+
+Existing test file (if present):
+```python
+{{ existing_tests }}
+```
+
+Missing lines (from coverage report):
+{{ missing_lines }}
+
+Previous iteration results (if any)
+-----------------------------------
+{% if collectors_errors -%}
+General failures:
+{{ collectors_errors }}
+{%- endif %}
+
+{%- if previous_failed_tests %}
+The following tests failed in the previous run:
+{% for t in previous_failed_tests %}
+- {{ t }}
+{% endfor %}
+
+Error traces / failure details:
+```text
+{% for err in previous_errors %}
+{{ err }}
+
+{% endfor %}
+```
+
+Instructions for iteration:
+- Prioritize fixing the failing tests listed above. Produce changes that address the errors shown in the traces.
+- If a previous failing test indicates an incorrect assumption about behavior, prefer writing a new focused test that documents correct behavior and uses mocking to isolate external dependencies.
+{%- else -%}
+No previous failures reported.
+{%- endif %}
+
+Requirements and constraints for generated tests
+----------------------------------------------
+
+- Output: ONLY a single Python 3 source file. No surrounding markdown, no explanation text.
+- The file should be usable with pytest (i.e. test_*.py file contents).
+- Import the module under test using a relative import or full package import that will work when the project root is the current working directory. {# Example: `from {{ source_filepath.replace('/', '.').rsplit('.py',1)[0] }} import <symbol>` or `import {{ source_filepath.file.replace('/', '.').rsplit('.py',1)[0] }}`. #}
+- Provide tests that exercise the code paths corresponding to the missing lines listed above. For each missing-line group, add at least one focused test that aims to execute the code around those lines.
+- If previous failures are provided, add or modify tests so they specifically cover and resolve those failures.
+- Keep tests deterministic and avoid external network or heavy I/O. If external dependencies are required, use simple mocks (e.g., `monkeypatch`) or replace with minimal stubs inside the test.
+- Use clear, descriptive test function names (e.g. `test_<module>_<behavior>`).
+- Prefer small, focused assertions. If behavior is unclear, write a sensible assertion that documents expected behavior (e.g., return value type or expected exception).
+- Keep the test file minimal and safe to run in CI (no sleeps, no network calls, no environment modifications outside test scope).
+
+Minimal and simplicity guidance (VERY IMPORTANT)
+------------------------------------------------
+
+- Generate the minimal number of tests required to cover the missing lines. Prefer one small test per missing-line group rather than many broad tests.
+- Keep each test extremely simple: a single focused call and 1-2 assertions maximum. Avoid complex fixtures, parametrization, or heavy setup.
+- Do not introduce new helper modules or external files. Inline any tiny stubs/mocks directly in the test using `monkeypatch` or minimal local functions.
+- Prefer direct function calls and simple assertions (e.g., equality, type checks, expected exceptions). Avoid advanced testing features unless strictly necessary.
+- If the missing lines are exception/error branches, write small tests that assert the exception is raised with a clear assertion (e.g., `with pytest.raises(...)`).
+- If previous failures are provided, write the simplest change (a single test) that demonstrates the correct behavior or documents the observed behavior.
+
+Instructions for formatting the test file
+-------------------------------------
+
+- Start the file with a small header comment indicating it was generated (single line comment).
+- Import only what you need from the module under test and from pytest.
+{# - For each function with missing lines, include a comment with the missing line numbers for traceability.
+- If previous failures are present, include a short comment referencing the failing test names and that this file aims to address them. #}
+
+Final instruction (must follow exactly)
+-------------------------------------
+
+Output only the Python 3 source code for the test file. No markdown, no explanation, and no extra files. The test file should be ready to run with `pytest` as-is.
