@@ -106,6 +106,8 @@ def main(argv=None) -> int:
         if not test_report.passed:
             # Some tests are failing, prioritize fixing them first
 
+            target_test_file = None
+
             print("Failing generated tests:")
             for test_file, errors in test_report.errors.items():
                 if test_file.is_relative_to(coverup_tests_dir):
