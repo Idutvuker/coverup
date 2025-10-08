@@ -4,7 +4,7 @@ set -euo pipefail
 # set -x
 
 # Replace with your source directory if copied elsewhere
-SRC_DIR="coverup/"
+SRC_DIR="things_cli/"
 TST_DIR="tests/"
 
 python3 -m venv .venv
