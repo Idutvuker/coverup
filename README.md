@@ -40,7 +40,7 @@ The tests will be generated in `samples/myproj/tests/coverup`
 
 ```bash
 cp run_tests_things_cli.sh samples/things-cli/
-python3 -m coverup samples/things-cli run_tests.sh
+python3 -m coverup samples/things-cli run_tests_things_cli.sh --target_coverage 90
 ```
 
 
