@@ -25,17 +25,12 @@ Missing lines (from coverage report):
 
 Previous iteration results (if any)
 -----------------------------------
-{% if collectors_errors -%}
-General failures:
-{{ collectors_errors }}
-{%- endif %}
-
 {%- if previous_failed_tests %}
 The following tests failed in the previous run:
 {% for t in previous_failed_tests %}
 - {{ t }}
 {% endfor %}
-{$ - endif %}
+{% endif -%}
 
 {%- if previous_errors %}
 Error traces / failure details:
@@ -49,9 +44,9 @@ Error traces / failure details:
 Instructions for iteration:
 - Prioritize fixing the failing tests listed above. Produce changes that address the errors shown in the traces.
 - If a previous failing test indicates an incorrect assumption about behavior, prefer writing a new focused test that documents correct behavior and uses mocking to isolate external dependencies.
-{%- else %}
+{% else %}
 No previous failures reported.
-{%- endif %}
+{% endif -%}
 
 Requirements and constraints for generated tests
 ----------------------------------------------

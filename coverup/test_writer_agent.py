@@ -71,7 +71,7 @@ def generate_tests(project_root: Path, rel_src_file: Path, file_coverage: Option
     print(f"Prompting LLM ({llm_caller.model})...")
 
     start = time.monotonic()
-    # response = llm_caller.call(prompt)
+    response = llm_caller.call(prompt)
     elapsed = time.monotonic() - start
 
     test_file.write_text(response, encoding="utf-8")
