@@ -35,7 +35,9 @@ The following tests failed in the previous run:
 {% for t in previous_failed_tests %}
 - {{ t }}
 {% endfor %}
+{$ - endif %}
 
+{%- if previous_errors %}
 Error traces / failure details:
 ```text
 {% for err in previous_errors %}
@@ -47,7 +49,7 @@ Error traces / failure details:
 Instructions for iteration:
 - Prioritize fixing the failing tests listed above. Produce changes that address the errors shown in the traces.
 - If a previous failing test indicates an incorrect assumption about behavior, prefer writing a new focused test that documents correct behavior and uses mocking to isolate external dependencies.
-{%- else -%}
+{%- else %}
 No previous failures reported.
 {%- endif %}
 

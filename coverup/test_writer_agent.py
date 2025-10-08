@@ -34,10 +34,9 @@ def build_prompt(rel_src_file: Path, rel_test_file: Path, src_file: Path, test_f
             enumerated_lines[i - 1] for i in file_coverage.missing_lines)
 
     failed_tests = test_report.getFailedTests()
-    previous_failed_tests = [test.name for test in failed_tests if test.name.startswith(
-        str(rel_test_file))] if failed_tests else None
-    previous_errors = [
-        test.error for test in failed_tests if test.error] if failed_tests else None
+    previous_failed_tests = [test.name for test in failed_tests if test.test_file == rel_test_file] if failed_tests else None
+
+    previous_errors = test_report.errors.get(rel_test_file, None)
 
     context = {
         "source_filepath": rel_src_file,
@@ -72,7 +71,7 @@ def generate_tests(project_root: Path, rel_src_file: Path, file_coverage: Option
     print(f"Prompting LLM ({llm_caller.model})...")
 
     start = time.monotonic()
-    response = llm_caller.call(prompt)
+    # response = llm_caller.call(prompt)
     elapsed = time.monotonic() - start
 
     test_file.write_text(response, encoding="utf-8")

@@ -15,33 +15,6 @@ def reverse_string(s: str) -> str:
 	return s[::-1]
 
 
-def merge_dicts(a: Mapping[str, Any], b: Mapping[str, Any]) -> Dict[str, Any]:
-	"""Return a new dictionary that is a deep-ish merge of dictionaries `a` and `b`.
-
-	Behavior:
-	- Keys present only in one dict are copied.
-	- If a key is present in both and both values are dict-like (Mapping),
-	  the merge is applied recursively.
-	- Otherwise the value from `b` overwrites the value from `a`.
-
-	This is a small, safe merge helper (not intended to cover every edge-case
-	of arbitrary mapping-like objects).
-	"""
-	result: Dict[str, Any] = {}
-	for k, v in a.items():
-		# copy initial entries from a
-		result[k] = v
-
-	for k, v in b.items():
-		if k in result and isinstance(result[k], Mapping) and isinstance(v, Mapping):
-			# recursive merge for nested mappings
-			result[k] = merge_dicts(result[k], v)  # type: ignore[arg-type]
-		else:
-			result[k] = v
-
-	return result
-
-
 def roll_dice(sides: int = 6, rolls: int = 1) -> List[int]:
 	"""Roll `rolls` dice with `sides` sides and return a list of integers.
 
